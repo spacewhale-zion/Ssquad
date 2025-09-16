@@ -1,17 +1,14 @@
-const express = require('express');
-const router = express.Router();
-import { protect, isAdmin } from '../middleware/authmiddleware';
+import express from 'express';
+import { protect, isAdmin } from '../middleware/authmiddleware.js';
+import { getCategories, seedCategories, addCategory } from '../controllers/CategoryController.js';
 
-// Import controllers
-import { getCategories, seedCategories,addCategory } from '../controllers/CategoryController'
+const router = express.Router();
 
 // --- Category Routes ---
 router.route('/categories')
-    .get(getCategories)       // GET all categories
-    .post(protect,isAdmin,addCategory);       // POST a new category
+    .get(getCategories)                 // GET all categories
+    .post(protect, isAdmin, addCategory); // POST a new category
 
-router.post('/categories/seed',protect, isAdmin, seedCategories); // Optional: For setup
+router.post('/categories/seed', protect, isAdmin, seedCategories); // Optional: For setup
 
-
-
-module.exports = router;
+export default router;

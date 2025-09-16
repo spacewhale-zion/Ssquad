@@ -1,38 +1,42 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-require('dotenv').config();
-const rateLimit = require('express-rate-limit');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
+
+import connectDB from './config/db.js';
+import authRoutes from './routes/authRoutes.js';
+import categoryRoutes from './routes/CategoryRoute.js';
+import banquetRequestRoutes from './routes/banquestRequest.js';
+
+dotenv.config();
+
+// Connect DB
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Middleware ---
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-
-
-// --- Rate Limiting ---
+// Rate Limiter
 const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per window
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    windowMs: 15 * 60 * 1000,
+    max: 100,
+    standardHeaders: true,
+    legacyHeaders: false,
     message: 'Too many requests from this IP, please try again after 15 minutes'
 });
 
-// Apply the rate limiter to all requests starting with /api
 app.use('/api', limiter);
 
-// --- API Routes ---
-app.use('/api/auth', require('./routes/authRoutes')); 
-app.use('/api', require('./routes/CategoryRoute'));
-app.use('/api', require('./routes/banquestRequest'));
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api', categoryRoutes);
+app.use('/api', banquetRequestRoutes);
 
-
-
-// --- Start Server ---
+// Start Server
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

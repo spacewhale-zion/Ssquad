@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { signup, login } from '../controllers/authController.js';
+import rateLimit from 'express-rate-limit';
+
 const router = express.Router();
-const { signup, login } = require('../controllers/authController');
-const rateLimit = require('express-rate-limit');
 
 // --- Stricter Rate Limiter for Auth Routes ---
 const authLimiter = rateLimit({
@@ -11,7 +12,8 @@ const authLimiter = rateLimit({
     skipSuccessfulRequests: true, // Don't count successful authentications
 });
 
-router.post('/signup', signup);
-router.post('/login', login);
+// Apply limiter to auth routes
+router.post('/signup', authLimiter, signup);
+router.post('/login', authLimiter, login);
 
-module.exports = router;
+export default router;
