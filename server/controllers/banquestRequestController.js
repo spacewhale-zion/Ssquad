@@ -5,7 +5,10 @@ import BanquetRequest from "../models/banquestRequest.js";
 const submitBanquetRequest = async (req, res) => {
   try {
     // The request body should match the schema
-    const newRequest = new BanquetRequest(req.body);
+     const newRequest = new BanquetRequest({
+      ...req.body,
+      user: req.user._id, // <-- attach logged-in user
+    });
     const savedRequest = await newRequest.save();
     res
       .status(201)
@@ -17,4 +20,15 @@ const submitBanquetRequest = async (req, res) => {
   }
 };
 
-export  { submitBanquetRequest };
+// @desc    Get all banquet requests (Admin only)
+// @route   GET /api/banquet-requests
+const getAllBanquetRequests = async (req, res) => {
+    try {
+        const requests = await BanquetRequest.find({}).populate('user', 'name email');
+        res.status(200).json(requests);
+    } catch (err) {
+        res.status(500).json({ message: 'Server Error', error: err.message });
+    }
+};
+
+export  { submitBanquetRequest,getAllBanquetRequests};
