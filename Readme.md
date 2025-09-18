@@ -1,6 +1,3 @@
-Here’s a properly formatted **README.md** version of what you wrote — with headings, code blocks, and better markdown styling for GitHub readability:
-
-````markdown
 # 🎉 Venue Booking App - Full Stack Mobile Application
 
 This repository contains the source code for a complete **mobile application** built with a **Flutter frontend** and a **Node.js backend**.  
@@ -48,12 +45,14 @@ Before you begin, make sure you have:
 
 To run the application, you need to set up both **backend** (server) and **frontend** (Flutter app).
 
+---
+
 ### 1️⃣ Clone the Repository
 
 ```bash
 git clone https://github.com/your-username/your-repository-name.git
 cd your-repository-name
-````
+```
 
 ---
 
@@ -89,7 +88,7 @@ npm start
 The server will run at:
 👉 [http://localhost:3000](http://localhost:3000)
 
-#### (Optional) Seed Initial Data
+
 
 To populate categories:
 
@@ -113,14 +112,34 @@ Install dependencies:
 flutter pub get
 ```
 
+#### 🔑 Frontend Environment Variables
+
+Create an `.env` file in the **frontend root** (same level as `pubspec.yaml`) and add your backend API URL:
+
+```env
+API_BASE_URL=http://10.0.2.2:3000/api   # For Android Emulator
+# API_BASE_URL=http://localhost:3000/api  # For iOS/Flutter Web
+```
+
+This value will be loaded inside your Flutter app using `flutter_dotenv`.
+
+Example usage in `ApiConstants.dart`:
+
+```dart
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+class ApiConstants {
+  static String get baseUrl => dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api';
+}
+```
+
 Run the Flutter app:
 
 ```bash
 flutter run
 ```
 
-The app is preconfigured to connect to the backend running at:
-👉 `http://localhost:3000`
+The app will connect to the backend using the `API_BASE_URL` from `.env`.
 
 ---
 
@@ -148,12 +167,9 @@ The app is preconfigured to connect to the backend running at:
 ## 📌 Notes
 
 * Make sure the backend server is running **before starting the Flutter app**.
-* Replace placeholder values in `.env` with your actual MongoDB connection string and secret keys.
+* Replace placeholder values in `.env` files with your actual MongoDB connection string, API base URL, and secret keys.
+* ⚠️ On Flutter Web, `.env` variables are bundled in the frontend → do **not** store sensitive information there (only safe values like API URLs).
 
 ---
-
-## 🤝 Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
 
 ---
