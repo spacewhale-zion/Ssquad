@@ -6,14 +6,14 @@ const categorySchema = new mongoose.Schema(
       type: String,
       required: [true, 'Category name is required'],
       trim: true,
-      unique: true, // prevent duplicate category names
+      unique: true, 
     },
     image: {
       type: String,
       required: [true, 'Category image is required'],
     },
   },
-  { timestamps: true } // adds createdAt & updatedAt
+  { timestamps: true } 
 );
 
 const Category = mongoose.model('Category', categorySchema);

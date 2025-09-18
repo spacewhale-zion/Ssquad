@@ -10,7 +10,6 @@ import banquetRequestRoutes from './routes/banquestRequest.js';
 
 dotenv.config();
 
-// Connect DB
 connectDB();
 
 const app = express();
@@ -31,12 +30,10 @@ const limiter = rateLimit({
 
 app.use('/api', limiter);
 
-// Routes
 app.use('/api/auth', authRoutes);
 app.use('/api', categoryRoutes);
 app.use('/api', banquetRequestRoutes);
 
-// Start Server
 app.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
 });

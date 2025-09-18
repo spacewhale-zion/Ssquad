@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please provide a password'],
         minlength: 6,
-        select: false // Do not return password field in queries by default
+        select: false 
     },
     role: {
         type: String,
@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Hash password before saving the user
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) {
         return next();
@@ -35,7 +34,6 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-// Method to compare entered password with hashed password
 userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };

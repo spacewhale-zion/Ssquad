@@ -1,7 +1,5 @@
 import Category from "../models/Category.js";
 
-// @desc    Get all categories for the home screen
-// @route   GET /api/categories
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find();
@@ -11,13 +9,11 @@ const getCategories = async (req, res) => {
   }
 };
 
-// @desc    Add a new category
-// @route   POST /api/categories
+
 const addCategory = async (req, res) => {
   try {
     const { name, image } = req.body;
 
-    // Basic validation
     if (!name || !image) {
       return res
         .status(400)
@@ -36,17 +32,32 @@ const addCategory = async (req, res) => {
   }
 };
 
-// @desc    Seed initial category data (for setup)
-// @route   POST /api/categories/seed
+
 const seedCategories = async (req, res) => {
   try {
-    await Category.deleteMany({}); // Clear existing categories
-
+    await Category.deleteMany({}); 
+    
     const initialCategories = [
-      { name: "Travel & Stay", image: "https://i.imgur.com/example1.jpg" },
-      { name: "BANQUETS & VENUES", image: "https://i.imgur.com/example2.jpg" },
-      { name: "Retail stores & Shops", image: "https://i.imgur.com/example3.jpg" },
-    ];
+  {
+    "name": "BANQUETS & VENUES",
+    "image": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=2070&auto=format&fit=crop"
+  },
+  {
+    "name": "Travel & Stay",
+    "image": "https://images.unsplash.com/photo-1439130490301-25e322d88054?q=80&w=1932&auto=format&fit=crop"
+  },
+ 
+  {
+    "name": "Corporate Events",
+    "image": "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop"
+  },
+
+  {
+      "name": "Music & Entertainment",
+      "image": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop"
+  }
+];
+ 
 
     await Category.insertMany(initialCategories);
     res.status(201).json({ message: "Categories seeded successfully!" });
@@ -54,5 +65,6 @@ const seedCategories = async (req, res) => {
     res.status(500).json({ message: "Server Error", error: err.message });
   }
 };
+
 
 export { getCategories, seedCategories, addCategory };

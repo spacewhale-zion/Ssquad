@@ -1,19 +1,20 @@
 import express from 'express';
-import { signup, login } from '../controllers/authController.js';
+import { signup, login,getUser } from '../controllers/authController.js';
 import rateLimit from 'express-rate-limit';
+import { protect, isAdmin } from '../middleware/authmiddleware.js';
 
 const router = express.Router();
 
-// --- Stricter Rate Limiter for Auth Routes ---
 const authLimiter = rateLimit({
-    windowMs: 10 * 60 * 1000, // 10 minutes
-    max: 5, // Limit each IP to 5 login/signup attempts per window
+    windowMs: 10 * 60 * 1000, 
+    max: 5, 
     message: 'Too many login attempts from this IP, please try again after 10 minutes',
-    skipSuccessfulRequests: true, // Don't count successful authentications
+    skipSuccessfulRequests: true,
 });
 
-// Apply limiter to auth routes
 router.post('/signup', authLimiter, signup);
 router.post('/login', authLimiter, login);
+
+router.get('/me', protect, getUser );
 
 export default router;

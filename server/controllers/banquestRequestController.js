@@ -1,13 +1,11 @@
 import BanquetRequest from "../models/banquestRequest.js";
 
-// @desc    Submit a new banquet & venue request
-// @route   POST /api/banquet-requests
+
 const submitBanquetRequest = async (req, res) => {
   try {
-    // The request body should match the schema
      const newRequest = new BanquetRequest({
       ...req.body,
-      user: req.user._id, // <-- attach logged-in user
+      user: req.user._id, 
     });
     const savedRequest = await newRequest.save();
     res
@@ -20,8 +18,7 @@ const submitBanquetRequest = async (req, res) => {
   }
 };
 
-// @desc    Get all banquet requests (Admin only)
-// @route   GET /api/banquet-requests
+
 const getAllBanquetRequests = async (req, res) => {
     try {
         const requests = await BanquetRequest.find({}).populate('user', 'name email');
