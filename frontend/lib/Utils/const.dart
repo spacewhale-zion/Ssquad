@@ -1,20 +1,17 @@
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiConstants {
-  static const String webBaseUrl = 'http://127.0.0.1:3000/api'; 
-  static const String androidBaseUrl = 'http://10.0.2.2:3000/api';
-  static const String iosBaseUrl = 'http://localhost:3000/api'; 
-
   static String get baseUrl {
     if (kIsWeb) {
-      return webBaseUrl;
+      return dotenv.env['BASE_URL'] ?? 'http://127.0.0.1:3000/api';
     } else if (Platform.isAndroid) {
-      return androidBaseUrl;
+      return dotenv.env['ANDROID_BASE_URL'] ?? 'http://10.0.2.2:3000/api';
     } else if (Platform.isIOS) {
-      return iosBaseUrl;
+      return dotenv.env['IOS_BASE_URL'] ?? 'http://localhost:3000/api';
     } else {
-      return webBaseUrl;
+      return dotenv.env['BASE_URL'] ?? 'http://127.0.0.1:3000/api';
     }
   }
 }
