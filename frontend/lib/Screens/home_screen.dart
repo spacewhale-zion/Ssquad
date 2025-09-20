@@ -16,8 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<Map<String, dynamic>?> _userFuture;
   late Future<List<dynamic>> _categoriesFuture;
 
-  final TextEditingController _searchController = TextEditingController(); 
-  String _searchQuery = ""; 
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = "";
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _searchController.addListener(() {
       setState(() {
-        _searchQuery = _searchController.text.toLowerCase(); 
+        _searchQuery = _searchController.text.toLowerCase();
       });
     });
   }
@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _logout() {
     _authService.logout();
     Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
         (Route<dynamic> route) => false);
   }
 
@@ -113,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
           _buildPlanCard(),
           const SizedBox(height: 20),
-          _buildSearchBar(), 
+          _buildSearchBar(),
         ],
       ),
     );
@@ -156,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildSearchBar() {
     return TextField(
-      controller: _searchController, 
+      controller: _searchController,
       decoration: InputDecoration(
         hintText: 'Search',
         prefixIcon: const Icon(Icons.search, color: Colors.grey),
@@ -183,7 +183,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
               ),
             ),
-            _buildCategoryList(), 
+            _buildCategoryList(),
           ],
         ),
       ),
@@ -191,21 +191,45 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoryList() {
+    const initialCategories = [
+      {
+        "name": "BANQUETS & VENUES",
+        "image":
+            "https://images.unsplash.com/photo-1523580494863-6f3031224c94?q=80&w=2070&auto=format&fit=crop"
+      },
+      {
+        "name": "Travel & Stay",
+        "image":
+            "https://images.unsplash.com/photo-1439130490301-25e322d88054?q=80&w=1932&auto=format&fit=crop"
+      },
+      {
+        "name": "Corporate Events",
+        "image":
+            "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop"
+      },
+      {
+        "name": "Music & Entertainment",
+        "image":
+            "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=2070&auto=format&fit=crop"
+      }
+    ];
+
     return FutureBuilder<List<dynamic>>(
       future: _categoriesFuture,
       builder: (context, snapshot) {
+        List<dynamic> categories;
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No categories found'));
+
+        if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
+          categories = initialCategories;
+        } else {
+          categories = snapshot.data!;
         }
 
-        
-        final filteredCategories = snapshot.data!
+        final filteredCategories = categories
             .where((category) =>
                 category['name']
                     .toString()
@@ -229,7 +253,8 @@ class _HomeScreenState extends State<HomeScreen> {
               () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => BanquetFormScreen()),
+                  MaterialPageRoute(
+                      builder: (context) => const BanquetFormScreen()),
                 );
               },
             );
@@ -286,7 +311,8 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(16.0),
               child: Text(
                 title,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
             ),
           ],
